@@ -9,7 +9,7 @@ let result;
 const userId = JSON.parse(localStorage.getItem("authenticatedUser"))?.id;
 const postsData = fetchPosts(userId);
 
-// Posts component
+// Posts component (definition)
 const Posts = () => {
   // No need for loading states
   const posts = postsData();
@@ -31,13 +31,13 @@ function fetchPosts(userId) {
     .then((res) => res.json())
     // Fetch request has gone well
     .then((success) => {
-      status = "done";
+      status = "fulfilled";
 
       result = success;
     })
     // Fetch request has failed
     .catch((error) => {
-      status = "failed";
+      status = "rejected";
 
       result = error;
     });
@@ -45,9 +45,9 @@ function fetchPosts(userId) {
   return () => {
     if (status === "pending") {
       throw fetching; // Suspend(A way to tell React data is still fetching)
-    } else if (status === "failed") {
+    } else if (status === "rejected") {
       throw result; // Result is an error
-    } else if (status === "done") {
+    } else if (status === "fulfilled") {
       return result; // Result is a fulfilled promise
     }
   };
