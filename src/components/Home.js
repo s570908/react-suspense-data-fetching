@@ -1,5 +1,6 @@
 import React from "react";
-import Content from "./Content";
+
+const Content = React.lazy(() => import("./Content"));
 
 const Home = () => {
   return (

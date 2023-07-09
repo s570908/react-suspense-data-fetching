@@ -1,7 +1,7 @@
 import React from "react";
 import Spinner from "react-loading-indicators";
 
-import Posts from "./Posts";
+const Posts = React.lazy(() => import("./Posts"));
 
 // React Component to render
 const MyPosts = () => {
