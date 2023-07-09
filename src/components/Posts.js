@@ -1,18 +1,16 @@
 import React from "react";
 import Post from "./Post";
+import MakeSuspender from "../libs/suspender";
 
-// Variables we will use to replay fetch() promise state to React
-let status = "pending";
-let result;
+const suspend = fetchPosts("10");
 
-// Start fetching posts even before rendering begins
-const userId = JSON.parse(localStorage.getItem("authenticatedUser"))?.id;
-const postsData = fetchPosts(userId);
-
-// Posts component (definition)
 const Posts = () => {
+  // Start fetching posts even before rendering begins
+  // const userId = JSON.parse(localStorage.getItem("authenticatedUser"))?.id;
   // No need for loading states
-  const posts = postsData();
+
+  const posts = suspend();
+
   return (
     <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
       {posts.map((post, idx) => (
@@ -24,33 +22,11 @@ const Posts = () => {
 
 // Fetch external data
 function fetchPosts(userId) {
-  let url = `https://jsonplaceholder.typicode.com/posts${
-    userId ? "?userId=" + userId : ""
-  }`;
-  let fetching = fetch(url)
-    .then((res) => res.json())
-    // Fetch request has gone well
-    .then((success) => {
-      status = "fulfilled";
-
-      result = success;
-    })
-    // Fetch request has failed
-    .catch((error) => {
-      status = "rejected";
-
-      result = error;
-    });
-
-  return () => {
-    if (status === "pending") {
-      throw fetching; // Suspend(A way to tell React data is still fetching)
-    } else if (status === "rejected") {
-      throw result; // Result is an error
-    } else if (status === "fulfilled") {
-      return result; // Result is a fulfilled promise
-    }
-  };
+  //let url = `https://jsonplaceholder.typicode.com/posts${userId ? "?userId=" + userId : ""}`;
+  let url = "https://jsonplaceholder.typicode.com/posts?userId=10";
+  let fetching = fetch(url).then((res) => res.json());
+  // Fetch request has gone well
+  return MakeSuspender(fetching);
 }
 
 export default Posts;

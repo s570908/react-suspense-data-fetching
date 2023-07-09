@@ -1,10 +1,12 @@
 import React from "react";
+import MakeSuspender from "../libs/suspender";
+
+const suspend = MakeSuspender(simulateLongWait());
 
 // React Component to render
 const Content = () => {
   // No need for loading states
-  const data = dataGetter();
-  console.log(data);
+  const data = suspend();
 
   return (
     <div style={{ marginLeft: "20px" }}>
@@ -14,33 +16,6 @@ const Content = () => {
   );
 };
 
-// Get our asynchronous data
-let status = "pending";
-let result;
-function dataGetter() {
-  let notYet = simulateLongWait()
-    .then((success) => {
-      status = "done";
-      console.log("Our Wait Has Resolved Success::: ", status);
-
-      result = success;
-    })
-    .catch((error) => {
-      status = "failed";
-      console.log("Our Wait Has FAILED!! ::: ", status);
-
-      result = error;
-    });
-
-  if (status === "pending") {
-    throw notYet;
-  } else if (status === "failed") {
-    throw result; // Result is an error
-  } else if (status === "done") {
-    return result; // Result is a fulfilled promise
-  }
-}
-
 // Simulate A Long `Fetch external Data` that returns a promise
 function simulateLongWait() {
   return new Promise((resolve, reject) => {
@@ -49,7 +24,7 @@ function simulateLongWait() {
         id,
         msg: "SetTimeout DONE! We should be having Data we have fetched!",
       });
-    }, 3000);
+    }, 10000);
   });
 }
 

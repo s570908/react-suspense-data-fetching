@@ -8,7 +8,7 @@ const MyPosts = () => {
   return (
     <div style={{ marginLeft: "20px" }}>
       <h1>My Posts</h1>
-      <React.Suspense fallback={<Spinner style={{ fontSize: "40px" }} />}>
+      <React.Suspense fallback={<Spinner style={{ fontSize: "5px" }} />}>
         <Posts />
       </React.Suspense>
     </div>
