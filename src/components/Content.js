@@ -1,12 +1,11 @@
 import React from "react";
-import MakeSuspender from "../libs/suspender";
 
-const suspend = MakeSuspender(simulateLongWait());
+import usePromise from "../libs/usePromise";
 
 // React Component to render
 const Content = () => {
   // No need for loading states
-  const data = suspend();
+  const data = usePromise(simulateLongWait, null);
 
   return (
     <div style={{ marginLeft: "20px" }}>
